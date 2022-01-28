@@ -1,69 +1,38 @@
 import matplotlib.pyplot as plt
 import numpy as np
+import func as fn
 
-def distanza(x,y):
-    if (abs(x-y) <= 0.5):
-        d= x-y
-    if ((x-y) < -0.5):
-        d=x-y+1.0
-    if ((x-y) > 0.5):
-        d=x-y-1.0
-    return d
-
-def avvolgimento(Nt, y, g):
-    sum = 0.0
-    for i in range(0,Nt-1):
-        sum = sum + distanza(g[i],y[i])
-    avv = int(sum)
-    return avv
-
-def diff_azione(i, y, g, f, yp1):
-    d1 = distanza(g[i],yp1)
-    d2 = distanza(g[i],y[i])
-    d3 = distanza(yp1,f[i])
-    d4 = distanza(y[i],f[i])
-    return (d1*d1)+(d3*d3)-(d2*d2)-(d4*d4)
-
-def geometry(Nt):
-    npp = [i+1 for i in range(0,Nt)]
-    nmm = [i-1 for i in range(0,Nt)]
-    npp[Nt-1] = 0
-    nmm[0] = Nt-1
-    return (npp, nmm)
-
-def azione_cammino(Nt, g, yp1, a):
-    s = 0.0 # azione totale
-    for i in range(0, Nt):
-        Di = distanza(g[i], yp1[i])
-        s = s + (1.0/(2.0*a))*(Di**2)
-    return s
-
-def metropolis(Nt, y):
-	(npp, nmm) = geometry(Nt)
-	for i in range(0, Nt):
-		y[i] = y[i] + np.random.uniform(-sqet, +sqet)
-		a = distanza(y[i], y[i-1])
-	return a
-
-def run_metropolis(lattice_dim, ret_, i_decorrel, measures):
-    for val in range(0, measures):
-        for iter in range(0, i_decorrel):
-            metr = metropolis(lattice_dim, ret_)
-    return 
-
-
-Nt = 50 # numero passi
+Nt = 1000 # numero passi in cui è discretizzata la circonferenza
 N = 10 # numero cammini
-eta = 0.04  # la spaziatura temporale
-Nt_eta = Nt*eta # qualcosa fissato
-sqet = np.sqrt(Nt_eta)
-y = [np.random.random() for i in range(0,Nt)] # array cammino
+a = (5.0)/Nt  # la spaziatura temporale
+y = np.zeros(shape=(Nt,))
 ym = np.zeros(shape=(Nt,))
 yp = np.zeros(shape=(Nt,))
-y = np.array(y)
-
-npp, nmm = geometry(Nt)
+npp, nmm = fn.geometry(Nt)
+term = 10000
+salto = 10
+D = (N-term)/salto
+delta = a**0.5
 
 for i in range(0, Nt):
-    yp[i] = y[npp[i]]
-    ym[i] = y[nmm[i]]
+    y[i] = y[i-1] + np.random.random()
+    if i == Nt-1:
+        y[Nt-1] = y[0]
+
+for i in range(0, Nt):
+    yp[i] = y[npp[i]] # E' il vettore dei valori di y precedenti a ogni sito del vettore y
+    ym[i] = y[nmm[i]] # E' il vettore dei valori di y successivi a ogni sito del vettore y
+
+avvol = np.zeros(shape=(50000,))
+for _ in range(0,50000):
+    if _%10==0:
+        print(_)
+    for j in range(0, N):
+        sd = fn.metropolis_locale(Nt,y,yp,ym, delta, a)
+    avvol[_] = sd
+
+print(len(avvol))
+plt.figure()
+plt.plot(np.arange(len(avvol)), avvol)
+plt.show()
+print(avvol)
