@@ -2,7 +2,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import func as fn
 
-Nt = 1000 # numero passi in cui è discretizzata la circonferenza
+Nt = 1800 # numero passi in cui è discretizzata la circonferenza
 N = 10 # numero cammini
 a = (5.0)/Nt  # la spaziatura temporale
 y = np.zeros(shape=(Nt,))
@@ -23,12 +23,10 @@ for i in range(0, Nt):
     yp[i] = y[npp[i]] # E' il vettore dei valori di y precedenti a ogni sito del vettore y
     ym[i] = y[nmm[i]] # E' il vettore dei valori di y successivi a ogni sito del vettore y
 
-avvol = np.zeros(shape=(50000,))
-for _ in range(0,50000):
-    if _%10==0:
-        print(_)
+avvol = np.zeros(shape=(500,))
+for _ in range(0,500):
     for j in range(0, N):
-        sd = fn.metropolis_locale(Nt,y,yp,ym, delta, a)
+        sd = fn.metropolis_locale(Nt,y,ym,yp, delta, a)
     avvol[_] = sd
 
 print(len(avvol))

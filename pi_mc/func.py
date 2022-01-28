@@ -68,6 +68,8 @@ def geometry(Nt):
 @njit(cache=True)
 def metropolis_locale(Nt,y, yp, ym, delta, a):
     y = np.zeros(shape=(Nt,))
+    ym = np.zeros(shape=(Nt,))
+    yp = np.zeros(shape=(Nt,))
     for i in range(0, Nt):
         y[i] = y[i-1] + np.random.random()
         if i == Nt-1:
@@ -93,6 +95,5 @@ def metropolis_locale(Nt,y, yp, ym, delta, a):
                 y[i] = y[i]
         if i == Nt-1:
             y[Nt-1] = y[0]
-
-    Q = avvolgimento(Nt,y,yp)
+    Q = avvolgimento(Nt,y,ym)
     return Q
