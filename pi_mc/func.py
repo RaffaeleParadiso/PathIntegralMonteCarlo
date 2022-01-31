@@ -73,7 +73,8 @@ def cammino_piano(Nt, a, cammini):
             y_new, Q, ypp, ymm = metropolis(y, Nt, a)
             y=y_new
         if cam > 10000:
-            Q=avvolgimento(Nt, y, ymm)
-            q.append(Q)
+            if cam%100 == 0:
+                Q=avvolgimento(Nt, y, ymm)
+                q.append(Q)
     return q, y, ypp, ymm
 
