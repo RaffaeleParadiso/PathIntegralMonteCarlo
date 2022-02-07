@@ -1,0 +1,14 @@
+import numpy as np
+
+NLATT=10
+ETA=0.1
+D_METRO=0.5
+MEASURE=100000
+I_DECORREL=10
+#For particle on a circle:
+CAMMINI=1000000
+TERM=10000
+NT_ARRAY=np.arange(100, 500, 50)
+TAILOR=True
+BOOTSTRAP=False
+BIN_ARRAY=[10, 20, 40, 80, 160, 320, 640]
