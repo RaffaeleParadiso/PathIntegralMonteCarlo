@@ -1,23 +1,23 @@
-import numpy as np
-import matplotlib.pyplot as plt
-import module.func_cerchio as fnc
-import multiprocessing
 from functools import partial
-import module.constants as const
-import module.bootstrap as boot
-from scipy.stats import norm
 import logging
+import multiprocessing
+import matplotlib.pyplot as plt
+import numpy as np
+from scipy.stats import norm
+import module.bootstrap as boot
+import module.constants as const
+import module.func_cerchio as fnc
 
 cammini = const.CAMMINI
-Tailor = const.TAILOR  # bool
-bootstrap_exe = const.BOOTSTRAP  # bool
+Tailor = const.TAILOR
+bootstrap_exe = const.BOOTSTRAP
 bin_arr = const.BIN_ARRAY
+term = const.TERM
+
 logging.basicConfig(level=logging.INFO)
             
 if __name__ == "__main__":
-    cammini = 100000
-    term = 100
-    Nt_arr = np.arange(100, 600, 50)
+    Nt_arr = np.arange(40, 22220000000, 22220000000000)
     tau_list = []
     processi = len(Nt_arr)
     Tailor=False
@@ -28,8 +28,9 @@ if __name__ == "__main__":
                 pool.map(fnc.cammino_piano, Nt_arr), dtype="object")
             pool.close()
             pool.join()
+            np.savetxt(f"cose.txt", q_arr)
         for Nt in range(len(Nt_arr)):
-            a=2./Nt_arr[Nt]
+            a=10./Nt_arr[Nt]
             q = q_arr[Nt, :]            
             plt.plot(range(len(q)), q)
             plt.show()
@@ -39,7 +40,7 @@ if __name__ == "__main__":
             xlims=[-15,15]
             plt.xlim(xlims)
             x=np.linspace(*xlims, 1000)
-            plt.plot(x, norm.pdf(x, 0, np.sqrt(2)), color='g', label=r'PDF attesa')
+            plt.plot(x, norm.pdf(x, 0, np.sqrt(10)), color='g', label=r'PDF attesa')
             plt.xlabel(r'$Q$')
             plt.ylabel(r'$P(Q)$')
             plt.show()
@@ -83,14 +84,6 @@ if __name__ == "__main__":
         # plt.show()
         tau=0
        
-
-
-
-
-
-
-        
-
 
         # if Tailor == True:
         #     q2_bootstrap = np.zeros((len(q_tailor[0, 0]), len(Nt_arr)))

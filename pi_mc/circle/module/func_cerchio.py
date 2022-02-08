@@ -1,13 +1,8 @@
 import numpy as np
-import matplotlib.pyplot as plt
-from numba import njit, float64
-# import constants as const
+from numba import njit
 
-# Nt_array=const.NT_ARRAY
-# cammini=const.CAMMINI
-# term=const.TERM
-cammini = 10000
-term = 100
+cammini = 1000000
+term = 10000
 
 @njit()
 def distanza(x, y):
@@ -109,11 +104,11 @@ def Tailor(y, epsilon, Nt, a):  # rif. all'articolo pag 7 algoritmo Tailor
 
 @njit(fastmath=True, parallel=True)
 def cammino_piano(Nt):
-    a = 2./Nt
+    a = 10./Nt
     q = []
     y = np.zeros(Nt)
     for i in range(0, Nt):
-        y[i] = np.random.normal(0, np.sqrt(a))
+        y[i] = np.random.normal(0.5, np.sqrt(a))
     for cam in range(cammini):
         if cam % 1000 == 0:
             print('sono al cammino metro', cam)

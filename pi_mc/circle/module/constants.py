@@ -1,4 +1,3 @@
-from operator import truediv
 import numpy as np
 
 NLATT=10
@@ -6,7 +5,6 @@ ETA=0.1
 D_METRO=0.5
 MEASURE=100000
 I_DECORREL=10
-#For particle on a circle:
 CAMMINI=1000000
 TERM=10000
 NT_ARRAY=np.arange(100, 450, 50)
