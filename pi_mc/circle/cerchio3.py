@@ -1,7 +1,5 @@
-from unittest import result
 import numpy as np
 import matplotlib.pyplot as plt
-from numba import njit
 import module.func_cerchio as fnc
 import multiprocessing
 from functools import partial
@@ -37,12 +35,13 @@ if __name__ == "__main__":
             plt.show()
             bins=np.arange(q.min(), q.max()+2)
             bins=bins-0.5
+            plt.hist(q, bins, density=True, histtype='step', fill=False, color='b', label=r'Istogramma di $Q$')
             xlims=[-15,15]
-            x=np.linspace(*xlims, 1000)
-            plt.figure()
-            plt.hist(q, bins, fill=False)
             plt.xlim(xlims)
-            plt.plot(x, norm.pdf(x, 0, np.sqrt(a)))
+            x=np.linspace(*xlims, 1000)
+            plt.plot(x, norm.pdf(x, 0, np.sqrt(2)), color='g', label=r'PDF attesa')
+            plt.xlabel(r'$Q$')
+            plt.ylabel(r'$P(Q)$')
             plt.show()
         print(q_arr[0,:])
         print(len(q_arr[0,:]), len(q_arr[:,0]))
