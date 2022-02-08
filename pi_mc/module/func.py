@@ -38,11 +38,14 @@ def geometry(Nt):
 def metropolis(y, Nt, a): #ymm va avanti e ypp va indietro
     y_new=y.copy()
     delta = 0.5
+    # delta = a**(0.5)
     ypp, ymm = np.zeros(Nt), np.zeros(Nt)
     npp, nmm = geometry(Nt)
     for i in range(Nt):
-        r = np.random.uniform(y[i]-delta,y[i]+delta)
-        yprova = r - round(r)
+        # r = np.random.uniform(y[i]-delta,y[i]+delta)
+        # yprova = r - round(r)
+        r = np.random.random()
+        yprova = (y[i] + (1-2*r)*delta)%1
         ypp[i] = y_new[npp[i]]  # come fa a sapere quello dopo?
         ymm[i] = y_new[nmm[i]]  # come fa a sapere quello prima per i = 0?
         s = diff_azione(i, y_new, ymm, ypp, yprova)
@@ -50,7 +53,7 @@ def metropolis(y, Nt, a): #ymm va avanti e ypp va indietro
             y_new[i] = yprova
             y_new[Nt-1]=y_new[0]
         else:
-            if (np.random.rand() < np.exp(-s/(2.0*a))):
+            if (np.random.uniform(0,1) < np.exp(-s/(2.0*a))):
                 y_new[i] = yprova
                 y_new[Nt-1]=y_new[0]
     for i in range(Nt):

@@ -1,3 +1,4 @@
+from operator import truediv
 import numpy as np
 
 NLATT=10
@@ -8,7 +9,9 @@ I_DECORREL=10
 #For particle on a circle:
 CAMMINI=1000000
 TERM=10000
-NT_ARRAY=np.arange(100, 500, 50)
+NT_ARRAY=np.arange(100, 450, 50)
 TAILOR=True
 BOOTSTRAP=False
-BIN_ARRAY=[10, 20, 40, 80, 160, 320, 640]
+n_bins=7
+bin_init=1
+BIN_ARRAY=np.array([bin_init*2**i for i in range(0, n_bins)])
