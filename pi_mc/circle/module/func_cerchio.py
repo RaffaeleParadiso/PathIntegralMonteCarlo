@@ -1,8 +1,13 @@
 import numpy as np
 from numba import njit
 
-cammini = 1000000
-term = 10000
+
+delta = 0.5
+Nt = 100000
+a = 2./Nt
+cammini=100000
+term=10000
+
 
 @njit()
 def distanza(x, y):
@@ -46,12 +51,10 @@ def metropolis(y, Nt, a):  # ymm va avanti e ypp va indietro
     for i in range(Nt):
         r = np.random.uniform(-delta, delta)
         yprova = y_new[i]+r
-        if yprova > 1:
-            yprova -= 1
-        if yprova < 0:
-            yprova += 1
-        ypp[i] = y_new[npp[i]]  # come fa a sapere quello dopo?
-        ymm[i] = y_new[nmm[i]]  # come fa a sapere quello prima per i = 0?
+        if yprova > 1: yprova -= 1
+        if yprova < 0: yprova += 1
+        ypp[i] = y_new[npp[i]]
+        ymm[i] = y_new[nmm[i]]
         s = diff_azione(i, y_new, ypp, ymm, yprova)
         if s <= 0:
             y_new[i] = yprova
@@ -67,7 +70,7 @@ def metropolis(y, Nt, a):  # ymm va avanti e ypp va indietro
     return y_new, Q, ypp, ymm
 
 @njit(fastmath=True, cache=True)
-def Tailor(y, epsilon, Nt, a):  # rif. all'articolo pag 7 algoritmo Tailor
+def Tailor(y, epsilon, Nt, a):
     y0 = y[0]+0.5
     delta = np.sqrt(a)
     ypp, ymm = np.zeros(Nt), np.zeros(Nt)
@@ -78,12 +81,9 @@ def Tailor(y, epsilon, Nt, a):  # rif. all'articolo pag 7 algoritmo Tailor
         dist = abs(distanza(y[i], y0))
         if dist <= epsilon:
             iend = i
-            continue  # trovo il primo iend tale che l'if statement sopra sia soddisfatto()
-    # valuto un certo yprova, ne calcolo la differenza di azione
+            continue
     yprova = 2*y0-y[iend]
-    dS = distanza(y[iend+1], y[iend])**2-distanza(y[iend+1],
-                                                  yprova)  # ora eseguo un test Metropolis
-    # print(dS)
+    dS = distanza(y[iend+1], y[iend])**2-distanza(y[iend+1], yprova)
     if dS <= 0:
         cambio = True
     else:
@@ -104,7 +104,6 @@ def Tailor(y, epsilon, Nt, a):  # rif. all'articolo pag 7 algoritmo Tailor
 
 @njit(fastmath=True, parallel=True)
 def cammino_piano(Nt):
-    a = 10./Nt
     q = []
     y = np.zeros(Nt)
     for i in range(0, Nt):
@@ -120,10 +119,7 @@ def cammino_piano(Nt):
             q.append(Q)
     return q
 
-#Tailor
-
-def Tailor_exe(Nt):
-    a = 10/Nt
+def Tailor_exe(Nt, a, cammini, term):
     epsilon = 0.2*a
     q_list = []
     y = np.array([np.random.rand() for i in range(Nt)])

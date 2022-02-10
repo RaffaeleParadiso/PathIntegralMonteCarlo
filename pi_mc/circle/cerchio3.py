@@ -24,13 +24,12 @@ if __name__ == "__main__":
 
     if Tailor == False:
         with multiprocessing.Pool(processes=processi) as pool:
-            q_arr = np.array(
-                pool.map(fnc.cammino_piano, Nt_arr), dtype="object")
+            q_arr = np.array(pool.map(fnc.cammino_piano, Nt_arr), dtype="object")
             pool.close()
             pool.join()
             np.savetxt(f"cose.txt", q_arr)
         for Nt in range(len(Nt_arr)):
-            a=10./Nt_arr[Nt]
+            a=2./Nt_arr[Nt]
             q = q_arr[Nt, :]            
             plt.plot(range(len(q)), q)
             plt.show()
@@ -110,5 +109,3 @@ if __name__ == "__main__":
         #         pool.close()
         #         pool.join()
         #         sigma_q2_max.append(sigma_max)
-
-
