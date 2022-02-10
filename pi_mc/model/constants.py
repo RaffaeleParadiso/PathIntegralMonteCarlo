@@ -1,15 +1,13 @@
 import numpy as np
 
-NLATT=10
-ETA=0.1
-D_METRO=0.5
-MEASURE=100000
-I_DECORREL=10
-CAMMINI=1000000
+NT = 10000
+BETA = 10
+ETA = BETA/NT
+DELTA_METRO=0.5
+PATHS=1000000
 TERM=10000
 NT_ARRAY=np.arange(100, 450, 50)
-TAILOR=True
-BOOTSTRAP=False
-n_bins=7
-bin_init=1
-BIN_ARRAY=np.array([bin_init*2**i for i in range(0, n_bins)])
+ETA_ARRAY = BETA/(np.array(NT_ARRAY))
+N_BINS=7
+BIN_INIT=1
+BIN_ARRAY=np.array([BIN_INIT*2**i for i in range(0, N_BINS)])

@@ -4,30 +4,34 @@ import multiprocessing
 import matplotlib.pyplot as plt
 import numpy as np
 from scipy.stats import norm
+
 import module.bootstrap as boot
-import module.constants as const
+import model.constants as const
 import module.func_cerchio as fnc
 
-cammini = const.CAMMINI
-Tailor = const.TAILOR
-bootstrap_exe = const.BOOTSTRAP
-bin_arr = const.BIN_ARRAY
+
+Nt = const.NT
+Beta = const.BETA
+a = const.ETA
+delta = const.DELTA_METRO
+cammini = const.PATHS
 term = const.TERM
+Nt_arr = const.NT_ARRAY
+bin_arr = const.BIN_ARRAY
 
 logging.basicConfig(level=logging.INFO)
             
 if __name__ == "__main__":
-    Nt_arr = np.arange(40, 22220000000, 22220000000000)
     tau_list = []
     processi = len(Nt_arr)
-    Tailor=False
-
+    Tailor = False
+    bootstrap_exe = False
     if Tailor == False:
         with multiprocessing.Pool(processes=processi) as pool:
             q_arr = np.array(pool.map(fnc.cammino_piano, Nt_arr), dtype="object")
             pool.close()
             pool.join()
-            np.savetxt(f"cose.txt", q_arr)
+            np.savetxt(f"results/cose.txt", q_arr)
         for Nt in range(len(Nt_arr)):
             a=2./Nt_arr[Nt]
             q = q_arr[Nt, :]            
@@ -81,14 +85,11 @@ if __name__ == "__main__":
         # tau=np.array([(0.5*N*sigma[t]**2)/(sigma_naive[t]**2) for t in range(len(sigma))])
         # plt.scatter(range(len(tau)), tau, s=4, c='red')
         # plt.show()
-        tau=0
-       
-
+        # tau=0
         # if Tailor == True:
         #     q2_bootstrap = np.zeros((len(q_tailor[0, 0]), len(Nt_arr)))
         #     for i in range(len(Nt_arr)):
         #         q2_bootstrap[::, i] = np.array(q_tailor[i, 0])**2
-
         # if Tailor == False:
         #     q2_bootstrap = np.zeros((len(q_arr[0, 0]), len(Nt_arr)))
         #     for i in range(len(Nt_arr)):
