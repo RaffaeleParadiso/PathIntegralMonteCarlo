@@ -1,7 +1,7 @@
 import numpy as np
 
 # temperature
-BETA = 2
+BETA = 1
 
 # discretization for the path on the circumference
 NT = 10000

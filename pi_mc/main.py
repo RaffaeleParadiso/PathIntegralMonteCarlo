@@ -46,9 +46,8 @@ if __name__ == "__main__":
     global_montecarlo = True
     bootstrap_exe = False
 
-    tau_list = []
-    processi = len(Nt_arr)
     if local_montecarlo:
+        processi = len(Nt_arr)
         mk(f"Results/Local_MonteCarlo/beta{Beta}_delta{delta}_{Nt_arr[-1]}")
         mk(f"MonteCarlo_History/Local_MonteCarlo/beta{Beta}_delta{delta}_{Nt_arr[-1]}")
         mk(f"Distribution/Local_MonteCarlo/beta{Beta}_delta{delta}_{Nt_arr[-1]}")
@@ -67,6 +66,7 @@ if __name__ == "__main__":
             fnc.distr_q(Nt_arr, Nt, Beta, q, path2, delta)
 
     if global_montecarlo:
+        processi = len(Nt_arr)
         mk(f"Results/Global_MonteCarlo/beta{Beta}_delta{delta}_{Nt_arr[-1]}")
         mk(f"MonteCarlo_History/Global_MonteCarlo/beta{Beta}_delta{delta}_{Nt_arr[-1]}")
         mk(f"Distribution/Global_MonteCarlo/beta{Beta}_delta{delta}_{Nt_arr[-1]}")
@@ -84,6 +84,9 @@ if __name__ == "__main__":
             fnc.graph_montecarlo(Nt_arr, Nt, Beta, q, path, delta)
             fnc.distr_q(Nt_arr, Nt, Beta, q, path2, delta)
 
+#---
+
+    # tau_list = []
     # if bootstrap_exe == True:
     #     sigma=[]
     #     if global_montecarlo == True : q_arr=q_tailor  
