@@ -1,5 +1,5 @@
 import numpy as np
-import module.bootstrap as bt
+import Module.bootstrap as bt
 
 obs_var = []
 obs_naive = []

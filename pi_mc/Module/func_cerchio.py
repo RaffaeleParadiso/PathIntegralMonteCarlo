@@ -126,7 +126,7 @@ def cammino_piano(Beta, cammini, term, delta, Nt):
         for _ in range(10):
             y_new, ypp = metropolis(y, Nt, a, ypp, ymm, delta)
             y = y_new
-        if ((cam > term) and cam % 10 == 0):
+        if ((cam > term) and cam % 5 == 0):
             q.append(avvolgimento(Nt, y_new, ypp))
     return np.array(q)
 
@@ -136,13 +136,11 @@ def Tailor(Beta, cammini, term, delta, Nt):
     p_cut = 0.08
     epsilon = 0.02*a
     y = np.zeros(Nt)
-    # for i in range(Nt):
-    #     y[i] = np.random.normal(0, delta)
     npp, nmm = geometry(Nt)
     q_list = []
     for t in range(cammini):
         if t % 1000 == 0:
-            print(f'gno {t}')
+            print('Cammino metropolis', t, 'Nt = ', Nt)
         ypp, ymm = np.zeros(Nt), np.zeros(Nt)
         if np.random.rand() < p_cut:
             y0 = (y[0]+0.5) % 1
@@ -163,8 +161,8 @@ def Tailor(Beta, cammini, term, delta, Nt):
             if cambio == True:
                 for m in range(iend, Nt):
                     y_new[m] = (2*y0-y[m]) % 1
-                    ypp[m] = y_new[npp[m]]  # è qui il problema!!!
-                    ymm[m] = y_new[nmm[m]]  # è qui il problema!!! forse
+                    ypp[m] = y_new[npp[m]]
+                    ymm[m] = y_new[nmm[m]]
             y = y_new
         for h in range(Nt):
             rand = np.random.randint(0, Nt)
