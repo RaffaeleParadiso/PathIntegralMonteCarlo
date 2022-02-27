@@ -81,7 +81,6 @@ def geometry(Nt):
 @njit(fastmath=True, cache=True)
 def metropolis(y, Nt, a, ypp, ymm, delta):
     y_new = y.copy()
-    delta = np.sqrt(a)
     for i in range(Nt):
         r = np.random.uniform(-delta, delta)
         yprova = (y_new[i]+r) % 1
@@ -109,11 +108,15 @@ def metropolis(y, Nt, a, ypp, ymm, delta):
     return y_new, ypp
 
 @njit(fastmath=True, parallel=True)
-def cammino_piano(Beta, cammini, term, delta, Nt):
-    a = Beta/Nt
+def cammino_piano(Beta, cammini, term, delt, Nt, dt_eta):
     ypp = np.zeros(Nt)
     ymm = np.zeros(Nt)
     a = (Beta/Nt)
+    if dt_eta == True:
+        delta = np.sqrt(a)
+    else:
+        delta = delt
+    print(delta)
     q = []
     y=np.zeros(Nt)
     npp, nmm = geometry(Nt)
@@ -126,13 +129,18 @@ def cammino_piano(Beta, cammini, term, delta, Nt):
         for _ in range(10):
             y_new, ypp = metropolis(y, Nt, a, ypp, ymm, delta)
             y = y_new
-        if ((cam > term) and cam % 5 == 0):
+        if ((cam > term) and cam % 10 == 0):
             q.append(avvolgimento(Nt, y_new, ypp))
     return np.array(q)
 
 @njit(fastmath=True, cache=True)
-def Tailor(Beta, cammini, term, delta, Nt):
+def Tailor(Beta, cammini, term, delt, Nt, dt_eta):
     a = (Beta/Nt)
+    if dt_eta == True:
+        delta = np.sqrt(a)
+    else:
+        delta = delt
+    print(delta)
     p_cut = 0.08
     epsilon = 0.02*a
     y = np.zeros(Nt)
@@ -185,12 +193,12 @@ def Tailor(Beta, cammini, term, delta, Nt):
 
 def graph_montecarlo(Nt_arr, Nt, Beta, q, path, delta):
     plt.figure(figsize=(15, 8))
-    plt.title(rf"MonteCarlo History for $Nt = {Nt_arr[Nt]}$ and  $\beta = {Beta}$, $\eta = {(Beta/Nt_arr[Nt]):.5f}$, $\delta = {delta}$")
+    plt.title(rf"MonteCarlo History for $Nt = {Nt_arr[Nt]}$ and  $\beta = {Beta}$, $\eta = {(Beta/Nt_arr[Nt]):.5f}$, $\delta = {delta:.5f}$")
     plt.ylabel("Q")
     plt.xlabel("MonteCarlo steps")
     plt.plot(range(len(q)), q, label=rf"$Nt = {Nt_arr[Nt]}$")
     # plt.legend(loc=3)
-    plt.savefig(rf"{path}/MC_Nt={Nt_arr[Nt]}_beta={Beta}_eta={(Beta/Nt_arr[Nt]):.5f}_delta={delta}.png", bbox_inches='tight')
+    plt.savefig(rf"{path}/MC_Nt={Nt_arr[Nt]}_beta={Beta}_eta={(Beta/Nt_arr[Nt]):.5f}_delta={delta:.5f}.png", bbox_inches='tight')
     plt.close()
 
 def distr_q(Nt_arr, Nt, Beta, q, path, delta):
@@ -198,7 +206,7 @@ def distr_q(Nt_arr, Nt, Beta, q, path, delta):
     bins=bins-0.5
     xlims=[-15,15]
     plt.figure(figsize=(6, 6))
-    plt.title(rf"Distribution for $Q$, $Nt = {Nt_arr[Nt]}$, $\beta = {Beta}$, $\eta = {(Beta/Nt_arr[Nt]):.5f}$, $\delta = {delta}$")
+    plt.title(rf"Distribution for $Q$, $Nt = {Nt_arr[Nt]}$, $\beta = {Beta}$, $\eta = {(Beta/Nt_arr[Nt]):.5f}$, $\delta = {delta:.5f}$")
     plt.hist(q, bins, density=True,
             histtype='bar', fill=False,
             color = "r", ec="r",lw = 1, label=r'Istogramma di $Q$')
@@ -209,7 +217,7 @@ def distr_q(Nt_arr, Nt, Beta, q, path, delta):
              color='g',label=r'PDF attesa')
     plt.xlabel(r'$Q$')
     plt.ylabel(r'$P(Q)$')
-    plt.savefig(rf"{path}/DistrQ_Nt={Nt_arr[Nt]}_beta={Beta}_eta={(Beta/Nt_arr[Nt]):.5f}_delta={delta}.png", bbox_inches='tight')
+    plt.savefig(rf"{path}/DistrQ_Nt={Nt_arr[Nt]}_beta={Beta}_eta={(Beta/Nt_arr[Nt]):.5f}_delta={delta:.5f}.png", bbox_inches='tight')
     plt.close()
 
 def graphic_analysis(Nt, q, Beta):
