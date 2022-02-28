@@ -44,7 +44,7 @@ sigma=[]
 sigma2_naive=[]
 # mk("Graphs_tau")
 x = -1 # freeze
-for Nt in range(200,550,50):
+for Nt in range(200,600,50):
     q_arr = (np.loadtxt(f"Results/Local_MonteCarlo/beta2_Nt_550_delta=0.5/" \
         f"Q_Nt={Nt}_beta=2_eta={(Beta/Nt):.5f}_delta=0.5.txt"))
         # _delta={np.sqrt(Beta/Nt_arr[Nt]):.5f}.txt"))
@@ -67,17 +67,19 @@ np.savetxt("tau.txt", tau)
 tau2 = np.ndarray.flatten(tau)
 print(tau)
 
-xa = np.arange(200,550,50)
-popt, pcov = curve_fit(expo, xa, tau2, p0=(0.07,0.029))
-a, ta = popt 
-print(a)
-print(ta)
+# xa = np.arange(200,500,50)
+# popt, pcov = curve_fit(expo, xa, tau2, p0=(0.07,0.029))
+# a, ta = popt 
+# print(a)
+# print(ta)
 print('lungo', N)
+print(len(tau))
+print(len(Nt_arr))
 plt.figure()
-plt.plot(xa, expo(xa, *popt), 'r-', label="Fitted Curve")
-plt.legend()
-plt.scatter(Nt_arr[:x], tau, c='red')
-plt.xticks(Nt_arr[:x])
+# plt.plot(xa, expo(xa, *popt), 'r-', label="Fitted Curve")
+# plt.legend()
+plt.scatter(Nt_arr[:-2], tau, c='red')
+plt.xticks(Nt_arr[:-2])
 plt.xlabel("Nt")
 plt.ylabel(rf"$\tau$")
 plt.yscale("log")

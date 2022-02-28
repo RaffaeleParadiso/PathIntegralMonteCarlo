@@ -13,6 +13,6 @@ PATHS=1000000
 TERM=50000
 
 # bootstrap parameters
-N_BINS=2
+N_BINS=10
 BIN_INIT=1010
 BIN_ARRAY=np.array([BIN_INIT*i for i in range(1, N_BINS)])
